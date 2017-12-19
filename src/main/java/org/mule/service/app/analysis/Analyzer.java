@@ -14,6 +14,8 @@ import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.Option;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
+import org.mule.service.app.analysis.flow.Element;
+import org.mule.service.app.util.Tree;
 
 public class Analyzer {
 
@@ -33,28 +35,28 @@ public class Analyzer {
 	}
 
 	public void run(File proyectDir) throws IOException, ParserConfigurationException {
-		Files.walk(proyectDir.toPath()).filter(new MuleAppPredicate()).forEach(new MuleAppConsumer());
+		Tree<Element> flowTree = new Tree<Element>();
+		Files.walk(proyectDir.toPath()).filter(new MuleAppPredicate()).forEach(new MuleAppConsumer(flowTree));
 	}
 
 	public static void main(String[] args) throws IOException, ParserConfigurationException, ParseException {
 		CommandLineParser parser = new DefaultParser();
 		Options options = new Options();
 
-		Option muleappOption = Option.builder("d").argName("directory" )
-                .hasArg(true)
-                .desc(  "Mule 4 App Directory Folder" ).build();
+		Option muleappOption = Option.builder("d").argName("directory").hasArg(true).desc("Mule 4 App Directory Folder")
+				.build();
 		options.addOption(muleappOption);
-		CommandLine cmd = parser.parse( options, args);
-		
+		CommandLine cmd = parser.parse(options, args);
+
 		Analyzer analysis = new Analyzer();
-		if( cmd.hasOption( "d" ) ) {
+		if (cmd.hasOption("d")) {
 			File fileDir = new File(cmd.getOptionValue("d"));
 			if (fileDir.isDirectory()) {
 				analysis.run(fileDir);
 			}
 		} else {
 			HelpFormatter formatter = new HelpFormatter();
-			formatter.printHelp( "analizer", options );
+			formatter.printHelp("analizer", options);
 		}
 
 	}
