@@ -1,6 +1,10 @@
 package org.mule.service.app.util;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public class Tree<T> {
+	Logger logger = LoggerFactory.getLogger(getClass());
 
 	private TreeNode<T> root = null;
 
@@ -22,10 +26,8 @@ public class Tree<T> {
 	public TreeNode<T> getRoot() {
 		return root;
 	}
-	
-	@Override
-	public String toString() {
-		return super.toString();
-	}
 
+	public void print() {
+		root.print();
+	}
 }
